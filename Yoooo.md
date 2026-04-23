@@ -51,3 +51,15 @@ MODEL_FILENAME: 远端模型文件名称, 默认为 sweep-next-edit-0.5b.q8_0.gg
 远端部署: Sweep API URL 填写 URL
 
 ![](./images/793787614510600.png)
+
+如果想要抓包 连接到本地proxyman代理
+![](./images/794026039395500.png)
+可以看到请求速度，我这是macbook 无显卡 9s 
+uvx sweep-autocomplete 也能看到日志，9秒属于 完全不可实际使用的状态了，需要不错的显卡
+
+```azure
+2026-04-23 15:00:04.943 | DEBUG    | sweep_autocomplete.app:stream:102 - Next edit autocomplete took 7423.94ms for finally block:exit_reason=no_retrieved_code_block | reason=unknown | retrieval_chunks_count=-1 | retrieval_chunks_char_count=-1 | retrieval_chunks_line_count=-1 | file_chunks_count=-1 | file_chunks_char_count=-1 | file_chunks_line_count=-1
+```
+![](./images/794191931652500.png)
+
+
