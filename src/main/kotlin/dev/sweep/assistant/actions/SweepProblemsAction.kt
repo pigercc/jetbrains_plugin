@@ -30,11 +30,11 @@ class SweepProblemsAction : AnAction() {
         val selectionPath = tree.selectionPath ?: return
         val problemNode = TreeUtil.getLastUserObject(ProblemNode::class.java, selectionPath) ?: return
         // Extract problem information
-        val message = problemNode.text
+        val message = problemNode.getText()
         val file = problemNode.file
         val document = file.findDocument() ?: return
 
-        val line = problemNode.line
+        val line = problemNode.getLine()
         // Get context with +/- 1 line, handling bounds
         val startLine = maxOf(0, line - 1)
         val endLine = minOf(document.lineCount - 1, line + 1)
@@ -64,7 +64,7 @@ class SweepProblemsAction : AnAction() {
         e.project?.let { project ->
             ProblemsView.getSelectedPanel(project)?.tree?.selectionPath?.let { path ->
                 TreeUtil.getLastUserObject(ProblemNode::class.java, path)?.let { node ->
-                    e.presentation.isVisible = node.severity >= 400
+                    e.presentation.isVisible = node.getSeverity() >= 400
                     return
                 }
             }

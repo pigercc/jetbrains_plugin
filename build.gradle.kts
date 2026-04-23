@@ -2,14 +2,15 @@ import com.google.protobuf.gradle.id
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.models.ProductRelease
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     application
     id("java")
     id("org.jetbrains.intellij.platform") version "2.2.0"
-    kotlin("jvm") version "2.1.0"
+    kotlin("jvm") version "2.3.0"
     id("com.google.protobuf") version "0.9.4"
-    kotlin("plugin.serialization") version "1.9.20"
+    kotlin("plugin.serialization") version "2.3.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -66,27 +67,33 @@ intellijPlatform {
                     ),
                 )
                 channels.set(listOf(ProductRelease.Channel.RELEASE))
-                sinceBuild.set("241")
+                sinceBuild.set("261")
                 untilBuild.set("261.*")
             }
         }
     }
 }
 
-tasks {
-    // Need JDK 17 for Intellij 2024.1.7
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(22))
+    }
+}
 
+tasks {
     withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
+        sourceCompatibility = "21"
+        targetCompatibility = "21"
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+        }
     }
 
     patchPluginXml {
-        sinceBuild.set("241")
-        untilBuild.set("253.*")
+        sinceBuild.set("261")
+        untilBuild.set("261.*")
     }
 
     signPlugin {
@@ -213,7 +220,7 @@ dependencies {
     }
     implementation("me.xdrop:fuzzywuzzy:1.4.0")
     implementation("org.xerial:sqlite-jdbc:3.44.1.0")
-    implementation("com.google.protobuf:protobuf-kotlin:3.23.4")
+    implementation("com.google.protobuf:protobuf-java:3.23.4")
     // MCP SDK - use JVM-specific artifacts for better compatibility
     implementation("io.modelcontextprotocol:kotlin-sdk-client-jvm:$mcpVersion") {
         exclude("org.jetbrains.kotlinx", "kotlinx-coroutines-core")
@@ -288,7 +295,6 @@ kotlin {
             kotlin.srcDirs(
                 "src/main/kotlin",
                 "build/generated/source/proto/main/java",
-                "build/generated/source/proto/main/kotlin",
                 "scripts",
             )
             // Add resources directory explicitly
@@ -306,14 +312,6 @@ protobuf {
         artifact = "com.google.protobuf:protoc:3.23.4"
     }
 
-    // Generate Kotlin code
-    generateProtoTasks {
-        all().forEach { task ->
-            task.builtins {
-                id("kotlin")
-            }
-        }
-    }
 }
 
 intellijPlatformTesting {

@@ -20,6 +20,7 @@ import com.intellij.openapi.editor.markup.HighlighterLayer
 import com.intellij.openapi.editor.markup.HighlighterTargetArea
 import com.intellij.openapi.editor.markup.RangeHighlighter
 import com.intellij.openapi.editor.markup.TextAttributes
+import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.TextEditor
 import com.intellij.openapi.project.Project
@@ -1274,8 +1275,9 @@ class PromptBarPanel(
     private suspend fun startCmdK(promptText: String) {
         val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return
         val document = editor.document
+        val virtualFile = FileDocumentManager.getInstance().getFile(document) ?: return
         val fileEditorManager = FileEditorManager.getInstance(project)
-        val fileEditors = fileEditorManager.getEditors(editor.virtualFile)
+        val fileEditors = fileEditorManager.getEditors(virtualFile)
         val globalEditor = fileEditorManager.selectedTextEditor ?: throw Exception("No files opened.")
         val fileEditor = fileEditors.filterIsInstance<TextEditor>().firstOrNull() ?: return
         var requestSuccess = false
@@ -1509,8 +1511,9 @@ class PromptBarPanel(
 
     private suspend fun startCmdKFullFile(promptText: String) {
         val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return
+        val virtualFile = FileDocumentManager.getInstance().getFile(editor.document) ?: return
         val fileEditorManager = FileEditorManager.getInstance(project)
-        val fileEditors = fileEditorManager.getEditors(editor.virtualFile)
+        val fileEditors = fileEditorManager.getEditors(virtualFile)
         val globalEditor = fileEditorManager.selectedTextEditor ?: throw Exception("No files opened.")
         val fileEditor = fileEditors.filterIsInstance<TextEditor>().firstOrNull() ?: return
         var requestSuccess = false
