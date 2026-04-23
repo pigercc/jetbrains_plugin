@@ -67,7 +67,7 @@ intellijPlatform {
                 )
                 channels.set(listOf(ProductRelease.Channel.RELEASE))
                 sinceBuild.set("241")
-                untilBuild.set("253.*")
+                untilBuild.set("261.*")
             }
         }
     }
@@ -256,7 +256,8 @@ dependencies {
         // https://www.jetbrains.com/idea/download/other.html
 //        androidStudio("2024.3.2.11") // Android Studio Meerkat | 2024.3.2 Patch 11
 //        androidStudio("2025.1.1.11") // Android Studio Narwhal | 2025.1.1 Patch 11
-        intellijIdeaCommunity("2025.1")
+//        intellijIdeaCommunity("2025.1")
+        intellijIdeaUltimate("2026.1")
 //        rustRover("2025.1")
 //        intellijIdeaCommunity("2023.3.8")
 //        intellijIdeaCommunity("2023.1.7")
